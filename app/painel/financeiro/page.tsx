@@ -1,7 +1,12 @@
+import { TrendingUp, TrendingDown, Wallet, Scissors } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import PageHeader from "../PageHeader";
+import StatCard from "../StatCard";
+import EmptyState from "../EmptyState";
+import { StaggerList } from "../StaggerList";
 import LancamentoForm from "./LancamentoForm";
-import LancamentoItem from "./LancamentoItem";
+import { LancamentoCard, LancamentoRow } from "./LancamentoItem";
 
 function primeiroDiaDoMes() {
   const agora = new Date();
@@ -59,62 +64,85 @@ export default async function FinanceiroPage({
   const atendimentos = lancamentos.filter((l) => l.agendamentoId).length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-bold uppercase tracking-tight text-tinta">
-        Financeiro
-      </h1>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        eyebrow="Painel"
+        title="Financeiro"
+        description="Acompanhe entradas, saídas e o saldo do período."
+        action={
+          <form method="get" className="flex flex-wrap items-center gap-2">
+            <input type="date" name="inicio" defaultValue={dataInicio} />
+            <span className="text-body-sm text-tinta-70">até</span>
+            <input type="date" name="fim" defaultValue={dataFim} />
+            <button type="submit" className="btn btn-primary h-[44px]">
+              Filtrar
+            </button>
+          </form>
+        }
+      />
 
-      <form method="get" className="flex flex-wrap items-center gap-2">
-        <input
-          type="date"
-          name="inicio"
-          defaultValue={dataInicio}
-          className="rounded-[12px] border border-cromo px-3 py-2"
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard
+          label="Entradas"
+          value={formatPreco(entradas)}
+          numero={entradas}
+          formatador={(n) => formatPreco(Math.round(n))}
+          icon={<TrendingUp size={20} strokeWidth={2} className="text-ouro-texto" />}
+          accent="ouro"
         />
-        <span className="text-tinta/60">até</span>
-        <input
-          type="date"
-          name="fim"
-          defaultValue={dataFim}
-          className="rounded-[12px] border border-cromo px-3 py-2"
+        <StatCard
+          label="Saídas"
+          value={formatPreco(saidas)}
+          numero={saidas}
+          formatador={(n) => formatPreco(Math.round(n))}
+          icon={<TrendingDown size={20} strokeWidth={2} className="text-vermelho" />}
+          accent="vermelho"
         />
-        <button
-          type="submit"
-          className="rounded-[12px] bg-ouro px-4 py-2 text-sm font-bold uppercase text-tinta"
-        >
-          Filtrar
-        </button>
-      </form>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-[12px] border border-cromo bg-fundo p-3">
-          <p className="text-xs uppercase text-tinta/60">Entradas</p>
-          <p className="text-lg font-bold text-ouro">{formatPreco(entradas)}</p>
-        </div>
-        <div className="rounded-[12px] border border-cromo bg-fundo p-3">
-          <p className="text-xs uppercase text-tinta/60">Saídas</p>
-          <p className="text-lg font-bold text-vermelho">{formatPreco(saidas)}</p>
-        </div>
-        <div className="rounded-[12px] border border-cromo bg-fundo p-3">
-          <p className="text-xs uppercase text-tinta/60">Saldo</p>
-          <p className="text-lg font-bold text-tinta">{formatPreco(saldo)}</p>
-        </div>
-        <div className="rounded-[12px] border border-cromo bg-fundo p-3">
-          <p className="text-xs uppercase text-tinta/60">Atendimentos</p>
-          <p className="text-lg font-bold text-tinta">{atendimentos}</p>
-        </div>
+        <StatCard
+          label="Saldo"
+          value={formatPreco(saldo)}
+          numero={saldo}
+          formatador={(n) => formatPreco(Math.round(n))}
+          icon={<Wallet size={20} strokeWidth={2} className="text-tinta" />}
+        />
+        <StatCard
+          label="Atendimentos"
+          value={String(atendimentos)}
+          numero={atendimentos}
+          formatador={(n) => String(Math.round(n))}
+          icon={<Scissors size={20} strokeWidth={2} className="text-tinta" />}
+        />
       </div>
 
       <LancamentoForm />
 
       {lancamentos.length === 0 ? (
-        <p className="text-sm text-tinta/60">Nenhum lançamento no período.</p>
+        <EmptyState title="Nenhum lançamento no período" />
       ) : (
-        <ul className="flex flex-col gap-2">
-          {lancamentos.map((lancamento) => (
-            <LancamentoItem key={lancamento.id} lancamento={lancamento} />
-          ))}
-        </ul>
+        <>
+          <StaggerList className="flex flex-col gap-3 lg:hidden">
+            {lancamentos.map((lancamento) => (
+              <LancamentoCard key={lancamento.id} lancamento={lancamento} />
+            ))}
+          </StaggerList>
+
+          <table className="hidden w-full text-left lg:table">
+            <thead>
+              <tr className="border-b border-cromo text-body-sm text-tinta-70">
+                <th className="pb-3 font-semibold">Data</th>
+                <th className="pb-3 font-semibold">Descrição</th>
+                <th className="pb-3 font-semibold">Categoria</th>
+                <th className="pb-3 font-semibold">Valor</th>
+                <th className="pb-3"></th>
+              </tr>
+            </thead>
+            <StaggerList as="tbody">
+              {lancamentos.map((lancamento) => (
+                <LancamentoRow key={lancamento.id} lancamento={lancamento} />
+              ))}
+            </StaggerList>
+          </table>
+        </>
       )}
     </div>
   );

@@ -1,5 +1,20 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { Archivo, Archivo_Black } from "next/font/google";
+import "./theme.css";
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const archivoBlack = Archivo_Black({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Dndu Corte",
@@ -12,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${archivo.variable} ${archivoBlack.variable}`}>
       <body>{children}</body>
     </html>
   );

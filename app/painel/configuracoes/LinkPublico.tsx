@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 
 export default function LinkPublico({
   link,
@@ -22,20 +23,27 @@ export default function LinkPublico({
   }
 
   return (
-    <div className="flex flex-col items-start gap-4 rounded-[12px] border border-cromo bg-fundo p-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start gap-4 rounded border border-cromo bg-branco p-6 sm:flex-row sm:items-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={qrCodeDataUrl}
         alt="QR Code do link de agendamento"
-        className="h-32 w-32 rounded-[12px]"
+        className="h-32 w-32 shrink-0 rounded border border-cromo"
       />
-      <div className="flex flex-1 flex-col gap-2">
-        <p className="break-all text-sm text-tinta">{link}</p>
-        <button
-          onClick={copiar}
-          className="self-start rounded-[12px] bg-ouro px-4 py-2 text-sm font-bold uppercase text-tinta"
-        >
-          {copiado ? "Copiado!" : "Copiar link"}
+      <div className="flex flex-1 flex-col gap-3">
+        <p className="break-all text-body-sm text-tinta-70">{link}</p>
+        <button onClick={copiar} className="btn btn-secondary self-start">
+          {copiado ? (
+            <>
+              <Check size={18} strokeWidth={2} aria-hidden />
+              Copiado!
+            </>
+          ) : (
+            <>
+              <Copy size={18} strokeWidth={2} aria-hidden />
+              Copiar link
+            </>
+          )}
         </button>
       </div>
     </div>

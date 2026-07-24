@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { gerarQrCodeDataUrl } from "@/lib/qrcode";
+import PageHeader from "../PageHeader";
 import ConfiguracoesForm from "./ConfiguracoesForm";
 import LinkPublico from "./LinkPublico";
 
@@ -21,17 +22,29 @@ export default async function ConfiguracoesPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-3">
-        <h1 className="text-xl font-bold uppercase tracking-tight text-tinta">
-          Configurações
-        </h1>
+      <PageHeader
+        eyebrow="Painel"
+        title="Configurações"
+        description="Dados da barbearia, regras de agendamento e link público."
+      />
+
+      <section className="flex flex-col gap-4">
+        <div>
+          <p className="eyebrow">Barbearia</p>
+          <h2 className="mt-1 font-display text-h2 text-tinta">
+            Dados gerais
+          </h2>
+        </div>
         <ConfiguracoesForm barbearia={barbearia} />
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-bold uppercase tracking-tight text-tinta">
-          Link público e QR Code
-        </h2>
+      <section className="flex flex-col gap-4">
+        <div>
+          <p className="eyebrow">Divulgação</p>
+          <h2 className="mt-1 font-display text-h2 text-tinta">
+            Link público e QR Code
+          </h2>
+        </div>
         <LinkPublico link={linkPublico} qrCodeDataUrl={qrCodeDataUrl} />
       </section>
     </div>

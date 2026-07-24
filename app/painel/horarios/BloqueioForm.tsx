@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
+import { Plus } from "lucide-react";
 import { criarBloqueio, type BloqueioState } from "./actions";
 
 const initialState: BloqueioState = {};
@@ -8,11 +9,8 @@ const initialState: BloqueioState = {};
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-[12px] bg-ouro px-4 py-2 font-bold uppercase tracking-wide text-tinta disabled:opacity-60"
-    >
+    <button type="submit" disabled={pending} className="btn btn-primary">
+      <Plus size={18} strokeWidth={2} aria-hidden />
       {pending ? "Salvando..." : "Adicionar bloqueio"}
     </button>
   );
@@ -24,43 +22,40 @@ export default function BloqueioForm() {
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-[12px] border border-cromo bg-fundo p-4"
+      className="flex flex-col gap-4 rounded border border-cromo bg-branco p-6"
     >
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Início
           </label>
           <input
             type="datetime-local"
             name="inicio"
             required
-            className="w-full rounded-[12px] border border-cromo px-3 py-2"
+            className="w-full"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Fim
           </label>
           <input
             type="datetime-local"
             name="fim"
             required
-            className="w-full rounded-[12px] border border-cromo px-3 py-2"
+            className="w-full"
           />
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-semibold text-tinta">
+        <label className="mb-1 block text-body-sm font-semibold text-tinta">
           Motivo
         </label>
-        <input
-          name="motivo"
-          className="w-full rounded-[12px] border border-cromo px-3 py-2"
-        />
+        <input name="motivo" className="w-full" />
       </div>
       {state.error && (
-        <p className="text-sm text-vermelho" role="alert">
+        <p className="text-body-sm text-vermelho" role="alert">
           {state.error}
         </p>
       )}

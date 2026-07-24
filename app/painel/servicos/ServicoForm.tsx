@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { Plus } from "lucide-react";
 import { createServico, type ServicoState } from "./actions";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
@@ -10,11 +11,8 @@ const initialState: ServicoState = {};
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-[12px] bg-ouro px-4 py-2 font-bold uppercase tracking-wide text-tinta disabled:opacity-60"
-    >
+    <button type="submit" disabled={pending} className="btn btn-primary">
+      <Plus size={18} strokeWidth={2} aria-hidden />
       {pending ? "Salvando..." : "Adicionar serviço"}
     </button>
   );
@@ -48,24 +46,20 @@ export default function ServicoForm() {
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-[12px] border border-cromo bg-fundo p-4"
+      className="flex flex-col gap-4 rounded border border-cromo bg-branco p-6"
     >
       <input type="hidden" name="fotoUrl" value={fotoUrl} />
       <input type="hidden" name="precoCentavos" value={precoCentavos} />
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Nome
           </label>
-          <input
-            name="nome"
-            required
-            className="w-full rounded-[12px] border border-cromo px-3 py-2"
-          />
+          <input name="nome" required className="w-full" />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Preço (R$)
           </label>
           <input
@@ -75,11 +69,11 @@ export default function ServicoForm() {
             required
             value={precoReais}
             onChange={(e) => setPrecoReais(e.target.value)}
-            className="w-full rounded-[12px] border border-cromo px-3 py-2"
+            className="w-full"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Duração (minutos)
           </label>
           <input
@@ -87,32 +81,32 @@ export default function ServicoForm() {
             type="number"
             min="1"
             required
-            className="w-full rounded-[12px] border border-cromo px-3 py-2"
+            className="w-full"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold text-tinta">
+          <label className="mb-1 block text-body-sm font-semibold text-tinta">
             Foto
           </label>
           <input type="file" accept="image/*" onChange={handleFile} />
-          {uploading && <p className="text-xs text-tinta/60">Enviando...</p>}
-          {uploadError && <p className="text-xs text-vermelho">{uploadError}</p>}
+          {uploading && (
+            <p className="mt-1 text-body-sm text-tinta-70">Enviando...</p>
+          )}
+          {uploadError && (
+            <p className="mt-1 text-body-sm text-vermelho">{uploadError}</p>
+          )}
         </div>
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-semibold text-tinta">
+        <label className="mb-1 block text-body-sm font-semibold text-tinta">
           Descrição
         </label>
-        <textarea
-          name="descricao"
-          rows={2}
-          className="w-full rounded-[12px] border border-cromo px-3 py-2"
-        />
+        <textarea name="descricao" rows={2} className="w-full" />
       </div>
 
       {state.error && (
-        <p className="text-sm text-vermelho" role="alert">
+        <p className="text-body-sm text-vermelho" role="alert">
           {state.error}
         </p>
       )}

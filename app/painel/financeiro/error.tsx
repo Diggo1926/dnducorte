@@ -1,17 +1,12 @@
 "use client";
 
+import ErrorState from "../ErrorState";
+
 export default function ErrorFinanceiro({
   reset,
 }: {
   error: Error;
   reset: () => void;
 }) {
-  return (
-    <div className="rounded-[12px] border border-vermelho bg-fundo p-4">
-      <p className="text-sm text-vermelho">Erro ao carregar o financeiro.</p>
-      <button onClick={reset} className="mt-2 text-sm text-tinta underline">
-        Tentar novamente
-      </button>
-    </div>
-  );
+  return <ErrorState message="Erro ao carregar o financeiro." reset={reset} />;
 }

@@ -2,21 +2,20 @@
 
 import { AlertTriangle } from "lucide-react";
 
-export default function ErrorAgendar({
+export default function ErrorState({
+  message,
   reset,
 }: {
-  error: Error;
+  message: string;
   reset: () => void;
 }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-3 bg-creme px-4 text-center">
+    <div className="flex flex-col items-center gap-3 rounded border border-vermelho bg-branco p-8 text-center">
       <AlertTriangle size={24} strokeWidth={2} className="text-vermelho" aria-hidden />
-      <p className="text-body-sm text-vermelho">
-        Não foi possível carregar a página de agendamento.
-      </p>
+      <p className="text-body-sm text-vermelho">{message}</p>
       <button onClick={reset} className="btn btn-secondary">
         Tentar novamente
       </button>
-    </main>
+    </div>
   );
 }

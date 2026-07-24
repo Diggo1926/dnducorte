@@ -1,3 +1,11 @@
+import { PageHeaderSkeleton, Skeleton } from "../Skeleton";
+
 export default function LoadingConfiguracoes() {
-  return <p className="text-sm text-tinta/60">Carregando configurações...</p>;
+  return (
+    <div className="flex flex-col gap-8">
+      <PageHeaderSkeleton />
+      <Skeleton className="h-64 w-full" />
+      <Skeleton className="h-32 w-full" />
+    </div>
+  );
 }

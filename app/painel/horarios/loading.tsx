@@ -1,3 +1,10 @@
+import { PageHeaderSkeleton, ListSkeleton } from "../Skeleton";
+
 export default function LoadingHorarios() {
-  return <p className="text-sm text-tinta/60">Carregando horários...</p>;
+  return (
+    <div className="flex flex-col gap-8">
+      <PageHeaderSkeleton />
+      <ListSkeleton rows={7} />
+    </div>
+  );
 }

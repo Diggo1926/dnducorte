@@ -1,12 +1,15 @@
+import Image from "next/image";
 import LoginForm from "./LoginForm";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-superficie px-4">
-      <div className="w-full max-w-sm rounded-[12px] border border-cromo bg-fundo p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold uppercase tracking-tight text-tinta">
-          Dndu Corte
-        </h1>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-tinta px-4 py-16">
+      <Image src="/logo-branco.png" alt="Dndu Corte" width={160} height={64} priority />
+      <div className="w-full max-w-sm rounded border border-cromo bg-branco p-8">
+        <div className="mb-6 text-center">
+          <p className="eyebrow">Painel</p>
+          <h1 className="mt-1 font-display text-h1 uppercase text-tinta">Entrar</h1>
+        </div>
         <LoginForm />
       </div>
     </main>

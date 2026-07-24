@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Dndu Corte — tokens de tema.
+  Única fonte de verdade para cor, tipografia, espaçamento e raio.
+  Não hardcode cor/font-size em componentes: use as classes utilitárias
+  do Tailwind mapeadas a partir daqui (ver tailwind.config.ts).
+*/
+
+:root {
+  /* Paleta */
+  --creme: #faf7f2;
+  --branco: #ffffff;
+  --tinta: #0b0b0d;
+  --tinta-70: #4a4a50;
+  --ouro: #c9a227;
+  --ouro-claro: #e8c55a;
+  /* --ouro como TEXTO sobre --creme/--branco fica em ~2.3:1 (falha AA).
+     Usar --ouro-texto para qualquer texto dourado sobre fundo claro;
+     --ouro continua valendo para fundo escuro, botões e bordas. */
+  --ouro-texto: #8a6a14;
+  --cromo: #dedbd5;
+  --azul: #1e4fa3;
+  --vermelho: #c81e2b;
+
+  /* Tailwind não consegue aplicar modificador de opacidade (ex.: bg-branco/5)
+     a uma cor vinda de var() puro — o utilitário sai sem nenhuma regra e o
+     elemento herda a cor do body. Por isso os poucos casos de texto/fundo
+     translúcido sobre --tinta usam tokens fixos aqui, não a sintaxe /NN. */
+  --branco-70: rgba(255, 255, 255, 0.7);
+  --branco-60: rgba(255, 255, 255, 0.6);
+  --branco-05: rgba(255, 255, 255, 0.05);
+
+  /* Raio único */
+  --radius: 12px;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--creme);
+  color: var(--tinta);
+  font-family: var(--font-sans), sans-serif;
+}
+
+::selection {
+  background-color: var(--ouro);
+  color: var(--tinta);
+}
+
+/* Rótulo eyebrow — assinatura do layout, acima de todo título de seção.
+   Cor padrão assume fundo claro (creme/branco); use .eyebrow-invert
+   sobre fundo escuro (--tinta), onde o --ouro puro já tem contraste AA. */
+.eyebrow {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ouro-texto);
+}
+.eyebrow-invert {
+  color: var(--ouro);
+}
+
+/* Faixa tricolor do poste — 4px, topo do header e base dos cards de serviço */
+.tricolor-stripe {
+  height: 4px;
+  width: 100%;
+  flex-shrink: 0;
+  background: linear-gradient(
+    to right,
+    var(--azul) 0%,
+    var(--azul) 33.333%,
+    var(--branco) 33.333%,
+    var(--branco) 66.666%,
+    var(--vermelho) 66.666%,
+    var(--vermelho) 100%
+  );
+}
+
+/* Emblema circular da logo (assets são medalhão em canvas sólido, sem alpha) */
+.logo-medallion {
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: block;
+  object-fit: cover;
+}
+
+/* Campos de formulário — normal / hover / focus-visible / disabled */
+input,
+textarea,
+select {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 16px;
+  color: var(--tinta);
+  background-color: var(--branco);
+  border: 1px solid var(--cromo);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  transition: border-color 150ms ease;
+}
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: var(--tinta-70);
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 1px;
+  border-color: var(--azul);
+}
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--cromo);
+  color: var(--tinta-70);
+  cursor: not-allowed;
+}
+
+/* Botões — chapados, sem gradiente, com os 4 estados */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: var(--radius);
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease,
+    color 150ms ease;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background-color: var(--ouro);
+  color: var(--tinta);
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--ouro-claro);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--tinta);
+  border-color: var(--tinta);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--tinta);
+  color: var(--creme);
+}
+
+.btn-secondary-invert {
+  background-color: transparent;
+  color: var(--branco);
+  border-color: var(--branco);
+}
+.btn-secondary-invert:hover:not(:disabled) {
+  background-color: var(--branco);
+  color: var(--tinta);
+}
+
+.btn-destructive {
+  background-color: transparent;
+  color: var(--vermelho);
+  border-color: var(--vermelho);
+}
+.btn-destructive:hover:not(:disabled) {
+  background-color: var(--vermelho);
+  color: var(--branco);
+}
+
+/* Skeleton com shimmer — telas que carregam dados */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+.skeleton {
+  border-radius: var(--radius);
+  background: linear-gradient(
+    100deg,
+    var(--cromo) 30%,
+    var(--branco) 50%,
+    var(--cromo) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Skeleton shimmer não é uma das animações 1-5: continua rodando. */
+  .skeleton {
+    animation-duration: 1.6s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
