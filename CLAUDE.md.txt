@@ -1,0 +1,195 @@
+# Dndu Corte — Regras do Projeto
+
+## Objetivo
+Sistema white-label de agendamento para barbearias.
+O barbeiro configura a barbearia e compartilha um link público de agendamento.
+Sem pagamento online.
+
+## Stack — NÃO alterar
+- Next.js 14+ App Router + TypeScript
+- Prisma + PostgreSQL
+- Tailwind CSS
+- Auth própria: bcrypt + cookie httpOnly assinado
+- Cloudinary: upload preset não assinado
+- Deploy: Vercel + PostgreSQL gerenciado
+- Monorepo NÃO permitido. Um único projeto Next.js.
+- Backend separado NÃO permitido.
+
+## Arquitetura
+Use Server Components por padrão.
+Use Client Components somente quando houver necessidade de interatividade.
+Use Server Actions quando apropriado.
+Use Route Handlers somente quando necessário.
+Valide entradas com Zod.
+Não criar API/backend separado.
+
+## Multi-tenant
+Toda entidade de negócio pertence a uma Barbearia.
+Nunca aceitar `barbeariaId` vindo diretamente do cliente.
+Sempre derivar `barbeariaId` da sessão no painel.
+Na área pública, resolver a barbearia pelo `slug`.
+
+Todas as queries privadas devem filtrar por `barbeariaId`.
+
+## Segurança
+- Senhas com bcrypt.
+- Cookie de sessão httpOnly, secure em produção.
+- Nunca expor senhaHash.
+- Validar toda entrada com Zod.
+- Validar autorização no servidor.
+- Não confiar em dados enviados pelo cliente.
+
+## Regras críticas
+- Disponibilidade é calculada no servidor.
+- Slots consideram horário de trabalho, intervalo, duração do serviço, bloqueios e agendamentos não cancelados.
+- Ao criar agendamento, revalidar disponibilidade dentro da transação.
+- Índice único: `(barbeariaId, inicio)`.
+- Agendamento usa o `usuarioId` do único ADMIN atualmente.
+- CONCLUIDO gera ENTRADA automaticamente.
+- Reverter CONCLUIDO remove/reverte o lançamento correspondente.
+- Agendamento público exige apenas nome + telefone.
+- Respeitar antecedenciaMinimaHoras.
+
+## Rotas
+/login
+/painel
+/painel/agenda
+/painel/servicos
+/painel/horarios
+/painel/financeiro
+/painel/configuracoes
+/agendar/[slug]
+
+## Dados principais
+Barbearia:
+id, slug único, nome, telefone, endereco, logoUrl,
+corPrimaria, corSecundaria, corDestaque,
+intervaloMinutos, antecedenciaMinimaHoras, criadoEm
+
+Usuario:
+id, barbeariaId, nome, email único, senhaHash,
+papel ADMIN|BARBEIRO
+
+Servico:
+id, barbeariaId, nome, descricao, precoCentavos,
+duracaoMinutos, fotoUrl, ativo, ordem
+
+HorarioTrabalho:
+id, barbeariaId, diaSemana 0-6,
+horaInicio, horaFim, ativo
+
+Bloqueio:
+id, barbeariaId, inicio, fim, motivo
+
+Agendamento:
+id, barbeariaId, usuarioId, servicoId,
+clienteNome, clienteTelefone,
+inicio, fim, precoCentavos,
+status PENDENTE|CONFIRMADO|CONCLUIDO|CANCELADO|FALTOU,
+criadoEm
+
+Lancamento:
+id, barbeariaId,
+tipo ENTRADA|SAIDA,
+descricao, valorCentavos, data, categoria,
+agendamentoId opcional e único
+
+## Financeiro v1
+Somente:
+- Entradas automáticas de atendimentos concluídos.
+- Saídas manuais.
+- Categoria livre.
+- Resumo por período: entradas, saídas, saldo e atendimentos.
+
+Não implementar:
+- comissão
+- comanda
+- projeção de caixa
+- funcionalidades financeiras extras
+
+## Público
+/agendar/[slug] deve ser uma página mobile-first em 3 passos:
+1. Serviço
+2. Data e horário disponível
+3. Nome + telefone + confirmação
+
+Exibir resumo e botão de WhatsApp.
+
+## White-label
+A marca deve vir do banco.
+Trocar a marca deve exigir alteração de dados, não código.
+
+Use CSS variables para:
+--fundo #FFFFFF
+--superficie #F4F4F6
+--tinta #0B0B0D
+--ouro #C9A227
+--ouro-claro #E8C55A
+--cromo #B9BDC4
+--azul #1E4FA3
+--vermelho #C81E2B
+
+A identidade é premium/street, metal, ouro e alto contraste.
+Não usar estética minimalista clean.
+Não usar gradientes coloridos exagerados.
+
+Header/rodapé: tinta.
+Primário: ouro + texto tinta.
+Cards: branco + borda cromo.
+Preço: ouro.
+Cantos: 12px.
+Sombras suaves.
+Tipografia de títulos: condensada/pesada, caixa alta.
+Texto: sans neutra.
+Detalhe tricolor azul/branco/vermelho somente como divisor sutil.
+
+## UX
+Mobile-first.
+Público: prioridade máxima para celular.
+Toda tela deve possuir estados adequados de:
+- loading
+- vazio
+- erro
+
+Não usar dados mockados no código final.
+
+## Seed
+Criar:
+- 1 Barbearia Dndu Corte
+- 1 usuário ADMIN
+- 4 serviços
+
+## Ordem de implementação
+1. Setup + Prisma + schema + seed
+2. Auth + layout do painel
+3. Serviços + Cloudinary
+4. Horários + bloqueios
+5. Motor de slots + agendamento público
+6. Agenda
+7. Financeiro
+8. Configurações + link + QR
+
+## Regra de execução
+Implementar UMA etapa por vez.
+Ao terminar:
+1. Validar a etapa.
+2. Executar testes/checks relevantes.
+3. Corrigir erros relacionados.
+4. Resumir alterações em no máximo 5 bullets.
+5. Informar o próximo passo.
+6. PARAR.
+
+Nunca iniciar a próxima etapa automaticamente.
+
+## Economia de contexto
+- Não ler o projeto inteiro.
+- Não reabrir arquivos já analisados sem necessidade.
+- Não analisar arquivos fora da tarefa.
+- Não ler node_modules, .next, dist, build, coverage, logs, .env ou caches.
+- Antes de editar, identificar apenas os arquivos diretamente envolvidos.
+- Fazer alterações mínimas.
+- Não refatorar código fora do escopo.
+- Não repetir explicações longas.
+- Preferir resumo curto ao final.
+- Não mostrar arquivos completos, apenas alterações relevantes.
+- Se uma informação já estiver neste arquivo, não procurar novamente no projeto.

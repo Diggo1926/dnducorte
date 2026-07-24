@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fundo: #ffffff;
+  --superficie: #f4f4f6;
+  --tinta: #0b0b0d;
+  --ouro: #c9a227;
+  --ouro-claro: #e8c55a;
+  --cromo: #b9bdc4;
+  --azul: #1e4fa3;
+  --vermelho: #c81e2b;
+}
+
+body {
+  background-color: var(--fundo);
+  color: var(--tinta);
+}

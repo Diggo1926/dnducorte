@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Papel {
+  ADMIN
+  BARBEIRO
+}
+
+enum StatusAgendamento {
+  PENDENTE
+  CONFIRMADO
+  CONCLUIDO
+  CANCELADO
+  FALTOU
+}
+
+enum TipoLancamento {
+  ENTRADA
+  SAIDA
+}
+
+model Barbearia {
+  id                     String   @id @default(cuid())
+  slug                   String   @unique
+  nome                   String
+  telefone               String
+  endereco               String
+  logoUrl                String?
+  corPrimaria            String   @default("#C9A227")
+  corSecundaria          String   @default("#0B0B0D")
+  corDestaque            String   @default("#E8C55A")
+  intervaloMinutos       Int      @default(15)
+  antecedenciaMinimaHoras Int     @default(1)
+  criadoEm               DateTime @default(now())
+
+  usuarios         Usuario[]
+  servicos         Servico[]
+  horariosTrabalho HorarioTrabalho[]
+  bloqueios        Bloqueio[]
+  agendamentos     Agendamento[]
+  lancamentos      Lancamento[]
+}
+
+model Usuario {
+  id          String @id @default(cuid())
+  barbeariaId String
+  barbearia   Barbearia @relation(fields: [barbeariaId], references: [id])
+  nome        String
+  email       String @unique
+  senhaHash   String
+  papel       Papel  @default(ADMIN)
+
+  agendamentos Agendamento[]
+
+  @@index([barbeariaId])
+}
+
+model Servico {
+  id             String  @id @default(cuid())
+  barbeariaId    String
+  barbearia      Barbearia @relation(fields: [barbeariaId], references: [id])
+  nome           String
+  descricao      String?
+  precoCentavos  Int
+  duracaoMinutos Int
+  fotoUrl        String?
+  ativo          Boolean @default(true)
+  ordem          Int     @default(0)
+
+  agendamentos Agendamento[]
+
+  @@index([barbeariaId])
+}
+
+model HorarioTrabalho {
+  id          String @id @default(cuid())
+  barbeariaId String
+  barbearia   Barbearia @relation(fields: [barbeariaId], references: [id])
+  diaSemana   Int
+  horaInicio  String
+  horaFim     String
+  ativo       Boolean @default(true)
+
+  @@index([barbeariaId])
+}
+
+model Bloqueio {
+  id          String   @id @default(cuid())
+  barbeariaId String
+  barbearia   Barbearia @relation(fields: [barbeariaId], references: [id])
+  inicio      DateTime
+  fim         DateTime
+  motivo      String?
+
+  @@index([barbeariaId])
+}
+
+model Agendamento {
+  id              String            @id @default(cuid())
+  barbeariaId     String
+  barbearia       Barbearia         @relation(fields: [barbeariaId], references: [id])
+  usuarioId       String
+  usuario         Usuario           @relation(fields: [usuarioId], references: [id])
+  servicoId       String
+  servico         Servico           @relation(fields: [servicoId], references: [id])
+  clienteNome     String
+  clienteTelefone String
+  inicio          DateTime
+  fim             DateTime
+  precoCentavos   Int
+  status          StatusAgendamento @default(PENDENTE)
+  criadoEm        DateTime          @default(now())
+
+  lancamento Lancamento?
+
+  @@unique([barbeariaId, inicio])
+  @@index([barbeariaId])
+}
+
+model Lancamento {
+  id            String         @id @default(cuid())
+  barbeariaId   String
+  barbearia     Barbearia      @relation(fields: [barbeariaId], references: [id])
+  tipo          TipoLancamento
+  descricao     String
+  valorCentavos Int
+  data          DateTime
+  categoria     String
+  agendamentoId String?        @unique
+  agendamento   Agendamento?   @relation(fields: [agendamentoId], references: [id])
+
+  @@index([barbeariaId])
+}
