@@ -86,7 +86,7 @@ export default async function FinanceiroPage({
           label="Entradas"
           value={formatPreco(entradas)}
           numero={entradas}
-          formatador={(n) => formatPreco(Math.round(n))}
+          formato="moeda"
           icon={<TrendingUp size={20} strokeWidth={2} className="text-ouro-texto" />}
           accent="ouro"
         />
@@ -94,7 +94,7 @@ export default async function FinanceiroPage({
           label="Saídas"
           value={formatPreco(saidas)}
           numero={saidas}
-          formatador={(n) => formatPreco(Math.round(n))}
+          formato="moeda"
           icon={<TrendingDown size={20} strokeWidth={2} className="text-vermelho" />}
           accent="vermelho"
         />
@@ -102,14 +102,14 @@ export default async function FinanceiroPage({
           label="Saldo"
           value={formatPreco(saldo)}
           numero={saldo}
-          formatador={(n) => formatPreco(Math.round(n))}
+          formato="moeda"
           icon={<Wallet size={20} strokeWidth={2} className="text-tinta" />}
         />
         <StatCard
           label="Atendimentos"
           value={String(atendimentos)}
           numero={atendimentos}
-          formatador={(n) => String(Math.round(n))}
+          formato="inteiro"
           icon={<Scissors size={20} strokeWidth={2} className="text-tinta" />}
         />
       </div>

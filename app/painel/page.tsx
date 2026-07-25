@@ -90,14 +90,14 @@ export default async function PainelHome() {
           label="Atendimentos hoje"
           value={String(agendamentosHoje.length)}
           numero={agendamentosHoje.length}
-          formatador={(n) => String(Math.round(n))}
+          formato="inteiro"
           icon={<Scissors size={20} strokeWidth={2} className="text-ouro-texto" />}
         />
         <StatCard
           label="Entradas do dia"
           value={formatPreco(entradasHoje._sum.valorCentavos ?? 0)}
           numero={entradasHoje._sum.valorCentavos ?? 0}
-          formatador={(n) => formatPreco(Math.round(n))}
+          formato="moeda"
           icon={<Wallet size={20} strokeWidth={2} className="text-ouro-texto" />}
           accent="ouro"
         />

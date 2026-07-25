@@ -9,12 +9,23 @@ const ACCENT_CLASS = {
   vermelho: "text-vermelho",
 } as const;
 
+function formatarNumero(n: number, formato: "inteiro" | "moeda") {
+  const arredondado = Math.round(n);
+  if (formato === "moeda") {
+    return (arredondado / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+  return String(arredondado);
+}
+
 function CountUp({
   to,
-  formatador,
+  formato,
 }: {
   to: number;
-  formatador: (n: number) => string;
+  formato: "inteiro" | "moeda";
 }) {
   const reduzirMovimento = useReducedMotion();
   const [exibido, setExibido] = useState(reduzirMovimento ? to : 0);
@@ -32,7 +43,7 @@ function CountUp({
     return () => controls.stop();
   }, [to, reduzirMovimento]);
 
-  return <>{formatador(exibido)}</>;
+  return <>{formatarNumero(exibido, formato)}</>;
 }
 
 export default function StatCard({
@@ -41,14 +52,14 @@ export default function StatCard({
   icon,
   accent = "tinta",
   numero,
-  formatador,
+  formato,
 }: {
   label: string;
   value: string;
   icon?: React.ReactNode;
   accent?: keyof typeof ACCENT_CLASS;
   numero?: number;
-  formatador?: (n: number) => string;
+  formato?: "inteiro" | "moeda";
 }) {
   return (
     <div className="rounded border border-cromo bg-branco p-4">
@@ -57,8 +68,8 @@ export default function StatCard({
         {icon}
       </div>
       <p className={`mt-1 font-display text-number ${ACCENT_CLASS[accent]}`}>
-        {numero !== undefined && formatador ? (
-          <CountUp to={numero} formatador={formatador} />
+        {numero !== undefined && formato ? (
+          <CountUp to={numero} formato={formato} />
         ) : (
           value
         )}
