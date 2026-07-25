@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getImagemServico } from "@/lib/servico-imagem";
 
 type Servico = {
   id: string;
@@ -35,14 +36,12 @@ export default function ServicosSection({ servicos }: { servicos: Servico[] }) {
             className="flex flex-col overflow-hidden rounded border border-cromo bg-branco transition-all duration-150 hover:-translate-y-1 hover:border-ouro hover:shadow-lg"
           >
             <div className="relative aspect-video w-full bg-creme">
-              {servico.fotoUrl && (
-                <Image
-                  src={servico.fotoUrl}
-                  alt={servico.nome}
-                  fill
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={getImagemServico(servico.nome, servico.fotoUrl)}
+                alt={servico.nome}
+                fill
+                className="object-cover"
+              />
             </div>
             <div className="flex flex-1 flex-col gap-2 p-6">
               <p className="font-display text-h3 uppercase text-tinta">

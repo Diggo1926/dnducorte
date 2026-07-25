@@ -5,6 +5,7 @@ import type { Servico } from "@prisma/client";
 import { Trash2 } from "lucide-react";
 import { StaggerItem } from "../StaggerList";
 import { toggleAtivo, deleteServico } from "./actions";
+import { getImagemServico } from "@/lib/servico-imagem";
 
 function formatPreco(centavos: number) {
   return (centavos / 100).toLocaleString("pt-BR", {
@@ -17,17 +18,13 @@ export function ServicoCard({ servico }: { servico: Servico }) {
   return (
     <StaggerItem className="overflow-hidden rounded border border-cromo bg-branco transition-all duration-150 hover:border-ouro hover:shadow-md">
       <div className="flex items-center gap-4 p-4">
-        {servico.fotoUrl ? (
-          <Image
-            src={servico.fotoUrl}
-            alt={servico.nome}
-            width={56}
-            height={56}
-            className="h-14 w-14 shrink-0 rounded object-cover"
-          />
-        ) : (
-          <div className="h-14 w-14 shrink-0 rounded bg-creme" />
-        )}
+        <Image
+          src={getImagemServico(servico.nome, servico.fotoUrl)}
+          alt={servico.nome}
+          width={56}
+          height={56}
+          className="h-14 w-14 shrink-0 rounded object-cover"
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-h3 text-tinta">
             {servico.nome}
@@ -75,17 +72,13 @@ export function ServicoRow({ servico }: { servico: Servico }) {
     <StaggerItem as="tr" className="border-b border-cromo last:border-0 transition-colors duration-150 hover:bg-creme">
       <td className="py-3 pr-4">
         <div className="flex items-center gap-3">
-          {servico.fotoUrl ? (
-            <Image
-              src={servico.fotoUrl}
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 shrink-0 rounded object-cover"
-            />
-          ) : (
-            <div className="h-10 w-10 shrink-0 rounded bg-creme" />
-          )}
+          <Image
+            src={getImagemServico(servico.nome, servico.fotoUrl)}
+            alt=""
+            width={40}
+            height={40}
+            className="h-10 w-10 shrink-0 rounded object-cover"
+          />
           <span className="font-semibold text-tinta">{servico.nome}</span>
         </div>
       </td>

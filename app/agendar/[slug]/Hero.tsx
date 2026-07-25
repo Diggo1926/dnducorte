@@ -19,7 +19,14 @@ export default function Hero({
         }}
       />
       <div className="relative flex flex-col items-center gap-6">
-        <Image src="/logo-branco.png" alt={nome} width={160} height={64} priority />
+        <Image
+          src="/logo-branco.png"
+          alt={nome}
+          width={96}
+          height={96}
+          priority
+          className="logo-medallion h-24 w-24"
+        />
         <div className="flex flex-col items-center gap-3">
           <p className="eyebrow eyebrow-invert">Barbearia</p>
           <h1 className="max-w-2xl font-display text-display uppercase leading-none text-branco">

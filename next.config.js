@@ -7,6 +7,9 @@ const nextConfig = {
         hostname: "res.cloudinary.com",
       },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "inline",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 
