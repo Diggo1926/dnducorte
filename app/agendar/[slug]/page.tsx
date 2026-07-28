@@ -32,7 +32,6 @@ export default async function AgendarPage({
     <main className="min-h-screen bg-creme">
       <PublicHeader nome={barbearia.nome} />
       <Hero nome={barbearia.nome} endereco={barbearia.endereco} />
-      <ServicosSection servicos={servicos} />
       <section id="agendamento" className="mx-auto max-w-md px-4 py-16 sm:px-6">
         <div className="mb-8 text-center">
           <p className="eyebrow">Agendar</p>
@@ -47,6 +46,7 @@ export default async function AgendarPage({
           servicos={servicos}
         />
       </section>
+      <ServicosSection servicos={servicos} />
     </main>
   );
 }
