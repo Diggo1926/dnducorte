@@ -7,8 +7,18 @@ const MAPA: { padrao: RegExp; arquivo: string }[] = [
   { padrao: /corte|cabelo/, arquivo: "corte" },
 ];
 
+const HOSTS_PERMITIDOS = ["res.cloudinary.com"];
+
+function fotoUrlValida(fotoUrl: string) {
+  try {
+    return HOSTS_PERMITIDOS.includes(new URL(fotoUrl).hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function getImagemServico(nome: string, fotoUrl?: string | null) {
-  if (fotoUrl) return fotoUrl;
+  if (fotoUrl && fotoUrlValida(fotoUrl)) return fotoUrl;
 
   const normalizado = nome
     .normalize("NFD")

@@ -13,6 +13,8 @@ export default async function ServicosPage() {
   const servicos = await prisma.servico.findMany({
     where: { barbeariaId: session.barbeariaId },
     orderBy: { ordem: "asc" },
+  }).catch(() => {
+    throw new Error("Falha ao carregar serviços.");
   });
 
   return (
