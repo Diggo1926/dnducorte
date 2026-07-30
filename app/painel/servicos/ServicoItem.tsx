@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import type { Servico } from "@prisma/client";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { StaggerItem } from "../StaggerList";
 import { toggleAtivo, deleteServico } from "./actions";
 import { getImagemServico } from "@/lib/servico-imagem";
+import ServicoForm from "./ServicoForm";
 
 function formatPreco(centavos: number) {
   return (centavos / 100).toLocaleString("pt-BR", {
@@ -15,6 +17,20 @@ function formatPreco(centavos: number) {
 }
 
 export function ServicoCard({ servico }: { servico: Servico }) {
+  const [editando, setEditando] = useState(false);
+
+  if (editando) {
+    return (
+      <StaggerItem>
+        <ServicoForm
+          servico={servico}
+          onSuccess={() => setEditando(false)}
+          onCancel={() => setEditando(false)}
+        />
+      </StaggerItem>
+    );
+  }
+
   return (
     <StaggerItem className="overflow-hidden rounded border border-cromo bg-branco transition-all duration-150 hover:border-ouro hover:shadow-md">
       <div className="flex items-center gap-4 p-4">
@@ -52,22 +68,48 @@ export function ServicoCard({ servico }: { servico: Servico }) {
             {servico.ativo ? "Ativo" : "Inativo"}
           </button>
         </form>
-        <form action={deleteServico}>
-          <input type="hidden" name="id" value={servico.id} />
+        <div className="flex items-center gap-2">
           <button
-            type="submit"
-            aria-label={`Excluir ${servico.nome}`}
-            className="btn btn-destructive h-9 px-3"
+            type="button"
+            onClick={() => setEditando(true)}
+            aria-label={`Editar ${servico.nome}`}
+            className="btn btn-secondary h-9 px-3"
           >
-            <Trash2 size={16} strokeWidth={2} aria-hidden />
+            <Pencil size={16} strokeWidth={2} aria-hidden />
           </button>
-        </form>
+          <form action={deleteServico}>
+            <input type="hidden" name="id" value={servico.id} />
+            <button
+              type="submit"
+              aria-label={`Excluir ${servico.nome}`}
+              className="btn btn-destructive h-9 px-3"
+            >
+              <Trash2 size={16} strokeWidth={2} aria-hidden />
+            </button>
+          </form>
+        </div>
       </div>
     </StaggerItem>
   );
 }
 
 export function ServicoRow({ servico }: { servico: Servico }) {
+  const [editando, setEditando] = useState(false);
+
+  if (editando) {
+    return (
+      <StaggerItem as="tr">
+        <td colSpan={5} className="py-3">
+          <ServicoForm
+            servico={servico}
+            onSuccess={() => setEditando(false)}
+            onCancel={() => setEditando(false)}
+          />
+        </td>
+      </StaggerItem>
+    );
+  }
+
   return (
     <StaggerItem as="tr" className="border-b border-cromo last:border-0 transition-colors duration-150 hover:bg-creme">
       <td className="py-3 pr-4">
@@ -104,16 +146,26 @@ export function ServicoRow({ servico }: { servico: Servico }) {
         </form>
       </td>
       <td className="py-3 text-right">
-        <form action={deleteServico}>
-          <input type="hidden" name="id" value={servico.id} />
+        <div className="flex items-center justify-end gap-2">
           <button
-            type="submit"
-            aria-label={`Excluir ${servico.nome}`}
-            className="btn btn-destructive h-9 px-3"
+            type="button"
+            onClick={() => setEditando(true)}
+            aria-label={`Editar ${servico.nome}`}
+            className="btn btn-secondary h-9 px-3"
           >
-            <Trash2 size={16} strokeWidth={2} aria-hidden />
+            <Pencil size={16} strokeWidth={2} aria-hidden />
           </button>
-        </form>
+          <form action={deleteServico}>
+            <input type="hidden" name="id" value={servico.id} />
+            <button
+              type="submit"
+              aria-label={`Excluir ${servico.nome}`}
+              className="btn btn-destructive h-9 px-3"
+            >
+              <Trash2 size={16} strokeWidth={2} aria-hidden />
+            </button>
+          </form>
+        </div>
       </td>
     </StaggerItem>
   );
